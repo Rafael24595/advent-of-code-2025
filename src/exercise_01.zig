@@ -1,6 +1,6 @@
 const std = @import("std");
 
-pub fn part_1() !void {
+pub fn execute() !void {
     const alloc = std.heap.page_allocator;
 
     const steps = try parse_input(alloc);
@@ -21,22 +21,20 @@ pub fn part_1() !void {
 
         loops += loop;
 
-        var fix_step: i64 = step;
         var direction: []const u8 = "left";
         if (step < 0) {
             direction = "right";
-            fix_step = step * -1;
         }
 
-        std.debug.print("Move {d} clicks to {s}: {d} | Loops: {d}\n", .{ fix_step, direction, cursor, loops });
+        std.debug.print("|  Move {d:<3} clicks to {s:<5}: {d:<2}  |  Loops: {d}  |\n", .{ @abs(step), direction, cursor, loops });
     }
 
-    std.debug.print("\nTotal zeroes: {d}\n", .{count});
+    std.debug.print("\nZeroes: {d}\n", .{count});
     std.debug.print("Loops: {d}\n", .{loops});
 }
 
 fn parse_input(allocator: std.mem.Allocator) ![]i64 {
-    var file = try std.fs.cwd().openFile("src/source/exercise_01_00.txt", .{});
+    var file = try std.fs.cwd().openFile("src/source/source_01_00.txt", .{});
     defer file.close();
 
     var buffer: [1024]u8 = undefined;
@@ -74,8 +72,8 @@ fn rotations(target: u8, positions: u8, cursor: u8, movement: i64) u8 {
         const after = @divFloor(i_cursor - i_target + movement, i_positions);
         const before = @divFloor(i_cursor - i_target, i_positions);
         return @intCast(@abs(after - before));
-    } 
-    
+    }
+
     if (movement < 0) {
         const after = @divFloor(i_target - i_cursor, i_positions);
         const before = @divFloor(i_target - (i_cursor + movement), i_positions);
