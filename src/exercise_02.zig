@@ -50,7 +50,7 @@ pub fn execute_blocks(alloc: std.mem.Allocator, ranges: []helper.Pair, fix_block
 }
 
 fn parse_input(alloc: std.mem.Allocator) ![]helper.Pair {
-    var file = try std.fs.cwd().openFile("src/source/source_02_01.txt", .{});
+    var file = try std.fs.cwd().openFile("src/source/source_02_00.txt", .{});
     defer file.close();
 
     var buffer: [1024]u8 = undefined;
