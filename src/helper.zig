@@ -1,5 +1,7 @@
 const std = @import("std");
 
+const configuration = @import("configuration.zig");
+
 pub const Pair = struct {
     a: usize,
     b: usize,
@@ -26,11 +28,19 @@ pub fn readEnvsWithFile(allocator: std.mem.Allocator, path: []const u8) !std.pro
     while (reader.takeDelimiterExclusive('\n')) |line| {
         const eq_index = std.mem.indexOf(u8, line, "=");
         if (eq_index) |i| {
-            const key = line[0..i];
-            const value = line[i + 1 ..];
+            const key = std.mem.trim(u8, line[0..i], " \n\t\r");
+            const value = std.mem.trim(u8, line[i + 1 ..], " \n\t\r");
             try env.put(key, value);
         }
     } else |_| {}
 
     return env;
+}
+
+pub fn printExp(comptime fmt: []const u8, args: anytype) !void {
+    if (!configuration.explain) {
+        return;
+    }
+
+    std.debug.print(fmt, args);
 }
