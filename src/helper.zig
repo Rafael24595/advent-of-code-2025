@@ -1,5 +1,10 @@
 const std = @import("std");
 
+pub const Pair = struct {
+    a: usize,
+    b: usize,
+};
+
 pub fn readEnvsWithFile(allocator: std.mem.Allocator, path: []const u8) !std.process.EnvMap {
     var env = try std.process.getEnvMap(allocator);
 
