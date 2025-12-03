@@ -37,7 +37,7 @@ pub fn readEnvsWithFile(allocator: std.mem.Allocator, path: []const u8) !std.pro
     return env;
 }
 
-pub fn printExp(comptime fmt: []const u8, args: anytype) !void {
+pub fn printExp(comptime fmt: []const u8, args: anytype) void {
     if (!configuration.explain) {
         return;
     }
