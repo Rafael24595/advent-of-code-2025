@@ -47,7 +47,7 @@ pub fn execute_blocks(alloc: std.mem.Allocator, ranges: []helper.Pair, fix_block
 
     const end_ms = std.time.milliTimestamp();
     
-    const time = try utils.formatTime(alloc, end_ms - start_ms);
+    const time = try utils.millisecondsToTime(alloc, end_ms - start_ms, null);
     defer alloc.free(time);
 
     std.debug.print("Total: {d}\n", .{total});

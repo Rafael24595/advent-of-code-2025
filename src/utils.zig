@@ -1,30 +1,35 @@
 const std = @import("std");
 
-pub fn formatTime(alloc: std.mem.Allocator, ms: i64) ![]const u8 {
-    const hours = @divFloor(ms, 3_600_000);
-    const minutes = @divFloor(@mod(ms , 3_600_000), 60_000);
-    const seconds = @divFloor(@mod(ms , 60_000), 1000);
-    const milliseconds = @mod(ms , 1000);
+pub const TimeUnit = struct {
+    label: []const u8,
+    time: i64,
+};
 
+pub const Millisecond: TimeUnit = .{ .label = "ms", .time = 1 };
+pub const Second: TimeUnit = .{ .label = "s", .time = 1000 };
+pub const Minute: TimeUnit = .{ .label = "m", .time = Second.time * 60 };
+pub const Hour: TimeUnit = .{ .label = "h", .time = Minute.time * 60 };
+pub const Day: TimeUnit = .{ .label = "d", .time = Hour.time * 24 };
+pub const Year: TimeUnit = .{ .label = "y", .time = Day.time * 365 };
+
+const TimeUnits: [6]TimeUnit = .{ Year, Day, Hour, Minute, Second, Millisecond };
+
+pub fn millisecondsToTime(alloc: std.mem.Allocator, ms: i64, limit: ?TimeUnit) ![]const u8 {
     var buffer = try std.ArrayList(u8).initCapacity(alloc, 0);
 
-    if (hours != 0) {
-        const time = try std.fmt.allocPrint(alloc, "{}h ", .{hours});
-        try buffer.appendSlice(alloc, time);
-    }
+    var fix_ms = ms;
+    for (TimeUnits) |unit| {
+        if (limit != null and std.mem.eql(u8, unit.label, limit.?.label)) {
+            break;
+        }
 
-    if (minutes != 0) {
-        const time = try std.fmt.allocPrint(alloc, "{}m ", .{minutes});
-        try buffer.appendSlice(alloc, time);
-    }
+        const amount = @divFloor(fix_ms, unit.time);
+        if (amount > 0 or buffer.capacity > 0 or std.mem.eql(u8, unit.label, "ms")) {
+            const time = try std.fmt.allocPrint(alloc, "{d}{s} ", .{amount, unit.label});
+            try buffer.appendSlice(alloc, time);
+        }
 
-    if (seconds != 0) {
-        const time = try std.fmt.allocPrint(alloc, "{}s ", .{seconds});
-        try buffer.appendSlice(alloc, time);
-    }
-    if (milliseconds != 0) {
-        const time = try std.fmt.allocPrint(alloc, "{}ms", .{milliseconds});
-        try buffer.appendSlice(alloc, time);
+        fix_ms = @mod(fix_ms, unit.time);
     }
 
     return std.mem.trim(u8, buffer.items, " \n\t\r");

@@ -64,7 +64,7 @@ fn execute(alloc: std.mem.Allocator, lines: [][]u8, limit: usize) !void {
 
     const end_ms = std.time.milliTimestamp();
 
-    const time = try utils.formatTime(alloc, end_ms - start_ms);
+    const time = try utils.millisecondsToTime(alloc, end_ms - start_ms, null);
     defer alloc.free(time);
 
     std.debug.print("Total: {d}\n", .{total});

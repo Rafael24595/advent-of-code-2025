@@ -37,7 +37,7 @@ pub fn execute() !void {
     }
     const end_ms = std.time.milliTimestamp();
 
-    const time = try utils.formatTime(alloc, end_ms - start_ms);
+    const time = try utils.millisecondsToTime(alloc, end_ms - start_ms, null);
     defer alloc.free(time);
 
     std.debug.print("\nZeroes: {d}\n", .{count});
