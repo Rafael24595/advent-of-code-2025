@@ -25,7 +25,7 @@ pub fn millisecondsToTime(alloc: std.mem.Allocator, ms: i64, limit: ?TimeUnit) !
 
         const amount = @divFloor(fix_ms, unit.time);
         if (amount > 0 or buffer.capacity > 0 or std.mem.eql(u8, unit.label, "ms")) {
-            const time = try std.fmt.allocPrint(alloc, "{d}{s} ", .{amount, unit.label});
+            const time = try std.fmt.allocPrint(alloc, "{d}{s} ", .{ amount, unit.label });
             try buffer.appendSlice(alloc, time);
         }
 
@@ -33,4 +33,14 @@ pub fn millisecondsToTime(alloc: std.mem.Allocator, ms: i64, limit: ?TimeUnit) !
     }
 
     return std.mem.trim(u8, buffer.items, " \n\t\r");
+}
+
+pub fn cloneMatrix(allocator: std.mem.Allocator, matrix: [][] u8) ![][]u8 {
+    var clone = try allocator.alloc([]u8, matrix.len);
+
+    for (matrix, 0..) |row, i| {
+        clone[i] = try allocator.dupe(u8, row);
+    }
+
+    return clone;
 }
