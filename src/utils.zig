@@ -44,3 +44,23 @@ pub fn cloneMatrix(allocator: std.mem.Allocator, matrix: [][] u8) ![][]u8 {
 
     return clone;
 }
+
+pub fn transposeMatrix(allocator: std.mem.Allocator, matrix: [][]i64) ![][]i64 {
+    const m_len = matrix.len;
+    const r_len = matrix[0].len;
+
+    var flat = try allocator.alloc(i64, m_len * r_len);
+
+    var transposed = try allocator.alloc([]i64, r_len);
+    for (0..r_len) |i| {
+        transposed[i] = flat[i * m_len .. i * m_len + m_len];
+    }
+
+    for (0..m_len) |i| {
+        for (0..r_len) |j| {
+            transposed[j][i] = matrix[i][j];
+        }
+    }
+
+    return transposed;
+}
