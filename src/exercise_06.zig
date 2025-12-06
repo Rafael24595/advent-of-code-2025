@@ -2,7 +2,7 @@ const std = @import("std");
 const helper = @import("helper.zig");
 const utils = @import("utils.zig");
 
-const FilePath = "src/source/source_06_01.txt";
+const FilePath = "src/source/source_06_00.txt";
 
 pub fn execute_01() !void {
     std.debug.print("\n------------------", .{});
