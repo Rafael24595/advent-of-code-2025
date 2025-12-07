@@ -87,3 +87,15 @@ pub fn printExp(comptime fmt: []const u8, args: anytype) void {
 
     std.debug.print(fmt, args);
 }
+
+pub fn printMatrix(matrix: [][]u8) void {
+    if (!configuration.explain) {
+        return;
+    }
+
+    printExp("\n", .{});
+    for (matrix) |row| {
+        printExp(" {s}\n", .{row});
+    }
+    printExp("\n", .{});
+}

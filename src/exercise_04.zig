@@ -11,7 +11,7 @@ pub fn execute_01() !void {
 
     const alloc = std.heap.page_allocator;
 
-    const lines = try helper.parseInputLines(alloc, "src/source/source_04_01.txt");
+    const lines = try helper.parseInputLines(alloc, "src/source/source_04_00.txt");
     defer alloc.free(lines);
 
     try executeOneLoop(alloc, lines);
@@ -24,7 +24,7 @@ pub fn execute_02() !void {
 
     const alloc = std.heap.page_allocator;
 
-    const lines = try helper.parseInputLines(alloc, "src/source/source_04_01.txt");
+    const lines = try helper.parseInputLines(alloc, "src/source/source_04_00.txt");
     defer alloc.free(lines);
 
     try executeAllLoops(alloc, lines);
@@ -35,14 +35,14 @@ fn executeOneLoop(alloc: std.mem.Allocator, matrix: [][]u8) !void {
     defer alloc.free(matrix_map);
 
     helper.printExp("\nInitial state:\n", .{});
-    print_matrix(matrix);
+    helper.printMatrix(matrix);
 
     const start_ms = std.time.milliTimestamp();
     const total = execute_loop(matrix, &matrix_map, 1);
     const end_ms = std.time.milliTimestamp();
 
     helper.printExp("\n\nFinal state:\n", .{});
-    print_matrix(matrix_map);
+    helper.printMatrix(matrix_map);
 
     const time = try utils.millisecondsToTime(alloc, end_ms - start_ms, null);
     defer alloc.free(time);
@@ -56,7 +56,7 @@ fn executeAllLoops(alloc: std.mem.Allocator, matrix: [][]u8) !void {
     defer alloc.free(matrix_map);
 
     helper.printExp("\nInitial state:\n", .{});
-    print_matrix(matrix);
+    helper.printMatrix(matrix);
 
     var matrix_cursor = matrix;
 
@@ -81,7 +81,7 @@ fn executeAllLoops(alloc: std.mem.Allocator, matrix: [][]u8) !void {
         matrix_cursor = matrix_map;
 
         helper.printExp("\n Loop {d} state:\n", .{loops});
-        print_matrix(matrix_map);
+        helper.printMatrix(matrix_map);
 
         helper.printExp(" Loop total: {d}\n\n", .{total_loop});
     }
@@ -138,16 +138,4 @@ fn execute_loop(matrix: [][]u8, matrix_map: *[][]u8, area: usize) usize {
     }
 
     return total;
-}
-
-fn print_matrix(matrix: [][]u8) void {
-    if (!configuration.explain) {
-        return;
-    }
-
-    helper.printExp("\n", .{});
-    for (matrix) |row| {
-        helper.printExp(" {s}\n", .{row});
-    }
-    helper.printExp("\n", .{});
 }
