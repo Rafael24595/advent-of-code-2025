@@ -7,13 +7,14 @@ const exercise_03 = @import("exercise_03.zig");
 const exercise_04 = @import("exercise_04.zig");
 const exercise_05 = @import("exercise_05.zig");
 const exercise_06 = @import("exercise_06.zig");
+const exercise_07 = @import("exercise_07.zig");
 
 pub fn main() !void {
     const allocator = std.heap.page_allocator;
     var env = try helper.readEnvsWithFile(allocator, ".env");
     defer env.deinit();
 
-     if (env.get("EXPLAIN")) |val| {
+    if (env.get("EXPLAIN")) |val| {
         if (std.mem.eql(u8, val, "true")) {
             configuration.explain = true;
         }
@@ -61,7 +62,7 @@ pub fn main() !void {
         }
     }
 
-      if (env.get("EXERCISE_06")) |val| {
+    if (env.get("EXERCISE_06")) |val| {
         if (std.mem.containsAtLeast(u8, val, 1, "01")) {
             try exercise_06.execute_01();
         }
@@ -70,4 +71,12 @@ pub fn main() !void {
         }
     }
 
+    if (env.get("EXERCISE_07")) |val| {
+        if (std.mem.containsAtLeast(u8, val, 1, "01")) {
+            try exercise_07.execute_01();
+        }
+        if (std.mem.containsAtLeast(u8, val, 1, "02")) {
+            try exercise_07.execute_02();
+        }
+    }
 }

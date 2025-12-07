@@ -35,7 +35,19 @@ pub fn millisecondsToTime(alloc: std.mem.Allocator, ms: i64, limit: ?TimeUnit) !
     return std.mem.trim(u8, buffer.items, " \n\t\r");
 }
 
-pub fn cloneMatrix(allocator: std.mem.Allocator, matrix: [][] u8) ![][]u8 {
+pub fn defineMatrix(alloc: std.mem.Allocator, rows: usize, columns: usize) ![][]i64 {
+    var matrix = try alloc.alloc([]i64, rows);
+    for (0..rows) |y| {
+        var row = try alloc.alloc(i64, columns);
+        for (0..columns) |x| {
+            row[x] = 0;
+        }
+        matrix[y] = row;
+    }
+    return matrix;
+}
+
+pub fn cloneMatrix(allocator: std.mem.Allocator, matrix: [][]u8) ![][]u8 {
     var clone = try allocator.alloc([]u8, matrix.len);
 
     for (matrix, 0..) |row, i| {
